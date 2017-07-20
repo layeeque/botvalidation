@@ -3,63 +3,29 @@ const bodyParser = require('body-parser');
 
 var https = require('https');
 const restService = express();
-var subscriberCount="";
-var viewCount="";
+var subscriberCount = "";
+var viewCount = "";
 
 restService.use(bodyParser.urlencoded({
     extended: true
 }));
 
 restService.use(bodyParser.json());
-restService.post('/echo', function(req, res) {
-   // var speech = req.body.result && req.body.result.parameters && req.body.result.parameters.echoText ? req.body.result.parameters.echoText : "Seems like some problem. Speak again."
+restService.post('/echo', function (req, res) {
+    var username = req.body.result && req.body.result.parameters && req.body.result.parameters.existinguser ? req.body.result.parameters.existinguser : "Seems like some problem. Speak again."
+    var pass = req.body.result && req.body.result.parameters && req.body.result.parameters.password ? req.body.result.parameters.password : "Seems like some problem. Speak again."
     //console.log(req.body);
-    
-     var action = req.body.result.action;
-      if(action=="subs")
-      {
-    
-     var endpoint = "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&id=NISTzgt0sTmuTa0LWjF-OQ,UCNISTzgt0sTmuTa0LWjF-OQ&key=AIzaSyAY5ItJuC8JUWlPPoUaeYvNyDAZRf1Jl44" // ENDPOINT GOES HERE
-            var body = ""
-            https.get(endpoint, (response) => {
-              response.on('data', (chunk) => { body += chunk })
-              response.on('end', () => {
-                var data = JSON.parse(body)
-                 subscriberCount = data.items[0].statistics.subscriberCount
-                
-              })
-            })
     return res.json({
-        speech: "Subscriber count is ".concat(subscriberCount),
-        displayText: "Subscriber count is ".concat(subscriberCount),
-        source: 'webhook-echo-sample'
+        speech: username,
+        displayText: username,
+        source: 'webhook-echo-sample',
     });
-}
 
- else
-{
-     var endpoint = "https://www.googleapis.com/youtube/v3/videos?part=statistics&id=BwEzPpdQCVQ&key=AIzaSyAY5ItJuC8JUWlPPoUaeYvNyDAZRf1Jl44" // ENDPOINT GOES HERE
-            var body = ""
-            https.get(endpoint, (response) => {
-              response.on('data', (chunk) => { body += chunk })
-              response.on('end', () => {
-                var data = JSON.parse(body)
-                   viewCount = data.items[0].statistics.viewCount
-                
-              })
-            })
-   
-    
-    
-    return res.json({
-        speech: "viewCount count is  ".concat(viewCount),
-        displayText: "viewCount count is ".concat(viewCount),
-        source: 'webhook-echo-sample'
-    });
-}
+
+
 });
 
-restService.post('/slack-test', function(req, res) {
+restService.post('/slack-test', function (req, res) {
 
     var slack_message = {
         "text": "Details of JIRA board for Browse and Commerce",
@@ -110,11 +76,11 @@ restService.post('/slack-test', function(req, res) {
         data: {
             "slack": slack_message
         }
-        
+
     });
 });
 
-restService.listen((process.env.PORT || 8000), function() {
+restService.listen((process.env.PORT || 8000), function () {
     console.log("Server up and listening")
-    
+
 });
