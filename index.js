@@ -16,8 +16,8 @@ restService.post('/echo', function (req, res) {
     var pass = req.body.result && req.body.result.parameters && req.body.result.parameters.password ? req.body.result.parameters.password : "Seems like some problem. Speak again."
     //console.log(req.body);
     return res.json({
-        speech: username.concat(pass),
-        displayText: username.concat(pass),
+        speech: pass,
+        displayText: username,
         source: 'webhook-echo-sample',
     });
 
